@@ -18,6 +18,7 @@ package org.commonjava.maven.ext.manip.state;
 import org.commonjava.maven.atlas.ident.ref.ArtifactRef;
 import org.commonjava.maven.atlas.ident.ref.ProjectVersionRef;
 import org.commonjava.maven.ext.manip.impl.DependencyManipulator;
+import org.commonjava.maven.ext.manip.model.SimpleScopedArtifactRef;
 import org.commonjava.maven.ext.manip.util.IdUtils;
 import org.commonjava.maven.ext.manip.util.PropertiesUtils;
 
@@ -73,7 +74,7 @@ public class DependencyState
 
     private final Map<String, String> dependencyExclusions;
 
-    private Map<ArtifactRef, String> remoteRESTdepMgmt;
+    private Map<SimpleScopedArtifactRef, String> remoteRESTdepMgmt;
 
     
     public DependencyState( final Properties userProps )
@@ -131,12 +132,12 @@ public class DependencyState
         return failOnStrictViolation;
     }
 
-    public void setRemoteRESTOverrides( Map<ArtifactRef, String> overrides )
+    public void setRemoteRESTOverrides( Map<SimpleScopedArtifactRef, String> overrides )
     {
         this.remoteRESTdepMgmt = overrides;
     }
 
-    public Map<ArtifactRef, String> getRemoteRESTOverrides( )
+    public Map<SimpleScopedArtifactRef, String> getRemoteRESTOverrides( )
     {
         return remoteRESTdepMgmt;
     }

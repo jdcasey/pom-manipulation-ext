@@ -29,6 +29,7 @@ import org.commonjava.maven.atlas.ident.ref.ProjectRef;
 import org.commonjava.maven.atlas.ident.ref.ProjectVersionRef;
 import org.commonjava.maven.atlas.ident.ref.SimpleProjectRef;
 import org.commonjava.maven.ext.manip.ManipulationException;
+import org.commonjava.maven.ext.manip.model.SimpleScopedArtifactRef;
 import org.commonjava.maven.ext.manip.resolver.GalleyAPIWrapper;
 import org.commonjava.maven.galley.TransferException;
 import org.commonjava.maven.galley.maven.GalleyMavenException;
@@ -145,13 +146,13 @@ public class ModelIO
     }
 
 
-    public Map<ArtifactRef, String> getRemoteDependencyVersionOverrides( final ProjectVersionRef ref )
+    public Map<SimpleScopedArtifactRef, String> getRemoteDependencyVersionOverrides( final ProjectVersionRef ref )
         throws ManipulationException
     {
         logger.debug( "Resolving dependency management GAV: " + ref );
 
-        final Map<ArtifactRef, String> versionOverrides =
-                        new LinkedHashMap<ArtifactRef, String>();
+        final Map<SimpleScopedArtifactRef, String> versionOverrides =
+                        new LinkedHashMap<SimpleScopedArtifactRef, String>();
         try
         {
             final MavenPomView pomView = galleyWrapper.readPomView( ref );
@@ -166,7 +167,7 @@ public class ModelIO
             {
                 for ( final DependencyView dep : deps )
                 {
-                    versionOverrides.put( dep.asArtifactRef(), dep.getVersion() );
+                    versionOverrides.put( new SimpleScopedArtifactRef( dep.asArtifactRef(), dep.isOptional(), dep.getScope() ), dep.getVersion() );
                     logger.debug( "Added version override for: " + dep.asProjectRef().toString() + ":" + dep.getVersion() );
                 }
             }

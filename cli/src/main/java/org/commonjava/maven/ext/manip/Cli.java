@@ -247,7 +247,7 @@ public class Cli
                     activeProfiles = new HashSet<String>();
                     Collections.addAll( activeProfiles, cmd.getOptionValue( 'P' ).split( "," ) );
                 }
-                Set<ArtifactRef> ts = RESTManipulator.establishDependencies( pomIO.parseProject( session.getPom() ), activeProfiles );
+                Set<SimpleScopedArtifactRef> ts = RESTManipulator.establishDependencies( pomIO.parseProject( session.getPom() ), activeProfiles );
                 logger.info( "Found {} dependencies.", ts.size() );
                 File output = null;
 
@@ -256,13 +256,10 @@ public class Cli
                     output = new File( cmd.getOptionValue( 'o' ) );
                     output.delete();
                 }
-                for ( ArtifactRef a : ts )
+                for ( SimpleScopedArtifactRef a : ts )
                 {
-                    String scope = null;
-                    if ( a instanceof SimpleScopedArtifactRef )
-                    {
-                        scope = ( (SimpleScopedArtifactRef) a ).getScope();
-                    }
+                    String scope = a.getScope();
+
                     if ( cmd.hasOption( 'o' ) )
                     {
                         if ( cmd.hasOption( "printGAVTC" ) )

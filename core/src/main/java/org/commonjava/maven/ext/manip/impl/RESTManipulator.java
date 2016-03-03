@@ -91,11 +91,11 @@ public class RESTManipulator implements Manipulator
             restParam.add( project.getKey() );
         }
 
-        Set<ArtifactRef> localDeps = establishDependencies( projects, null );
+        Set<SimpleScopedArtifactRef> localDeps = establishDependencies( projects, null );
 
         // Ok we now have a defined list of top level project plus a unique list of all possible dependencies.
         // Need to send that to the rest interface to get a translation.
-        for ( ArtifactRef p : localDeps )
+        for ( SimpleScopedArtifactRef p : localDeps )
         {
             restParam.add( p.asProjectVersionRef() );
         }
@@ -139,10 +139,10 @@ public class RESTManipulator implements Manipulator
         vs.setRESTMetadata (versionStates);
 
         final DependencyState ds = session.getState( DependencyState.class );
-        final Map<ArtifactRef, String> overrides = new HashMap<ArtifactRef, String>( );
+        final Map<SimpleScopedArtifactRef, String> overrides = new HashMap<SimpleScopedArtifactRef, String>( );
 
         // Convert the loaded remote ProjectVersionRefs to the original ArtifactRefs
-        for (ArtifactRef a : localDeps )
+        for (SimpleScopedArtifactRef a : localDeps )
         {
             if (restResult.containsKey( a.asProjectVersionRef() ))
             {
@@ -178,9 +178,9 @@ public class RESTManipulator implements Manipulator
      * @return an unsorted set of ArtifactRefs used.
      * @throws ManipulationException
      */
-    public static Set<ArtifactRef> establishDependencies( final List<Project> projects, Set<String> activeProfiles ) throws ManipulationException
+    public static Set<SimpleScopedArtifactRef> establishDependencies( final List<Project> projects, Set<String> activeProfiles ) throws ManipulationException
     {
-        Set<ArtifactRef> localDeps = new TreeSet<ArtifactRef>();
+        Set<SimpleScopedArtifactRef> localDeps = new TreeSet<SimpleScopedArtifactRef>();
         Set<String> activeModules = new HashSet<String>();
         boolean scanAll = false;
 
@@ -252,7 +252,7 @@ public class RESTManipulator implements Manipulator
      * @param deps Set of ProjectVersionRef to store the results in.
      * @param dependencies dependencies to examine
      */
-    private static void recordDependencies( List<Project> projects, Project project, Set<ArtifactRef> deps, Iterable<Dependency> dependencies )
+    private static void recordDependencies( List<Project> projects, Project project, Set<SimpleScopedArtifactRef> deps, Iterable<Dependency> dependencies )
                     throws ManipulationException
     {
         if ( dependencies == null )

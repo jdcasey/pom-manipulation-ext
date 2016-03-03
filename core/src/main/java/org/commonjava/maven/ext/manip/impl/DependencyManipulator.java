@@ -31,6 +31,7 @@ import org.commonjava.maven.ext.manip.ManipulationException;
 import org.commonjava.maven.ext.manip.ManipulationSession;
 import org.commonjava.maven.ext.manip.io.ModelIO;
 import org.commonjava.maven.ext.manip.model.Project;
+import org.commonjava.maven.ext.manip.model.SimpleScopedArtifactRef;
 import org.commonjava.maven.ext.manip.state.DependencyState;
 import org.commonjava.maven.ext.manip.util.PropertiesUtils;
 import org.commonjava.maven.ext.manip.util.WildcardMap;
@@ -122,14 +123,14 @@ public class DependencyManipulator implements Manipulator
      * @return the loaded overrides
      * @throws ManipulationException
      */
-    private Map<ArtifactRef, String> loadRemoteOverrides( final DependencyState state )
+    private Map<SimpleScopedArtifactRef, String> loadRemoteOverrides( final DependencyState state )
         throws ManipulationException
     {
-        Map<ArtifactRef, String> overrides = state.getRemoteRESTOverrides();
+        Map<SimpleScopedArtifactRef, String> overrides = state.getRemoteRESTOverrides();
 
         if ( overrides == null)
         {
-            overrides = new LinkedHashMap<ArtifactRef, String>();
+            overrides = new LinkedHashMap<SimpleScopedArtifactRef, String>();
             final List<ProjectVersionRef> gavs = state.getRemoteBOMDepMgmt();
 
             if ( gavs == null || gavs.isEmpty() )
@@ -155,7 +156,7 @@ public class DependencyManipulator implements Manipulator
     }
 
     protected Set<Project> internalApplyChanges( final List<Project> projects, final ManipulationSession session,
-                                                 Map<ArtifactRef, String> overrides )
+                                                 Map<SimpleScopedArtifactRef, String> overrides )
                     throws ManipulationException
     {
         final DependencyState state = session.getState( DependencyState.class );
@@ -226,7 +227,7 @@ public class DependencyManipulator implements Manipulator
      * Applies dependency overrides to the project.
      */
     private void apply( final ManipulationSession session, final Project project, final Model model,
-                        final Map<ArtifactRef, String> overrides )
+                        final Map<SimpleScopedArtifactRef, String> overrides )
                     throws ManipulationException
     {
         // Map of Group : Map of artifactId [ may be wildcard ] : value
@@ -332,7 +333,7 @@ public class DependencyManipulator implements Manipulator
                     final List<Dependency> extraDeps = new ArrayList<Dependency>();
 
                     // Add dependencies to Dependency Management which did not match any existing dependency
-                    for ( final ArtifactRef var : overrides.keySet() )
+                    for ( final SimpleScopedArtifactRef var : overrides.keySet() )
                     {
                         if ( !nonMatchingVersionOverrides.containsKey( var ) )
                         {

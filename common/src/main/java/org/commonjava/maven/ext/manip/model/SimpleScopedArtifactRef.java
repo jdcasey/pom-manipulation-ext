@@ -15,6 +15,7 @@
  */
 package org.commonjava.maven.ext.manip.model;
 
+import org.apache.maven.model.Dependency;
 import org.commonjava.maven.atlas.ident.DependencyScope;
 import org.commonjava.maven.atlas.ident.ref.ArtifactRef;
 import org.commonjava.maven.atlas.ident.ref.ProjectVersionRef;
@@ -28,20 +29,35 @@ import org.commonjava.maven.atlas.ident.version.VersionSpec;
 public class SimpleScopedArtifactRef extends SimpleArtifactRef
 {
 
+    private final boolean optional;
     private final DependencyScope scope;
 
     public SimpleScopedArtifactRef( final String groupId, final String artifactId, final VersionSpec version,
                               final String type, final String classifier, final boolean optional,
                               final String scope)
     {
-        super( groupId, artifactId, version, type, classifier, optional );
+        super( groupId, artifactId, version, type, classifier );
+        this.optional = optional;
         this.scope = DependencyScope.getScope( scope );
     }
 
     public SimpleScopedArtifactRef( final ProjectVersionRef ref, final TypeAndClassifier tc, final boolean optional, final String scope )
     {
-        super( ref, tc, optional );
+        super( ref, tc );
+        this.optional = optional;
         this.scope = DependencyScope.getScope( scope );
+    }
+
+    public SimpleScopedArtifactRef( ArtifactRef ref, boolean optional, DependencyScope scope )
+    {
+        super( ref, ref.getTypeAndClassifier() );
+        this.optional = optional;
+        this.scope = scope;
+    }
+
+    public boolean isOptional()
+    {
+        return optional;
     }
 
     public String getScope()

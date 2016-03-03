@@ -84,6 +84,8 @@ public class ManipulatingEventSpy
                                 (ch.qos.logback.classic.Logger) LoggerFactory.getLogger( org.slf4j.Logger.ROOT_LOGGER_NAME );
                             root.setLevel( Level.DEBUG );
                         }
+
+                        logger.info( "Initializing manipulation engine..." );
                         session.setMavenSession( ee.getSession() );
                         manipulationManager.init( session );
                     }
@@ -109,6 +111,7 @@ public class ManipulatingEventSpy
                         return;
                     }
 
+                    logger.info( "Applying manipulations to projects..." );
                     manipulationManager.scanAndApply ( session );
                 }
             }
